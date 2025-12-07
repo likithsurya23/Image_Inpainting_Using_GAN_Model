@@ -1,9 +1,8 @@
 import React from 'react'
-import './IterationControls.css'
 
 const IterationControls = ({ iterations, onIterationChange, isLoading = false }) => {
   const handleIterationChange = (value) => {
-    const newValue = Math.max(1, Math.min(5, value)) // Limit between 1-5
+    const newValue = Math.max(1, Math.min(5, value))
     onIterationChange(newValue)
   }
 
@@ -22,7 +21,7 @@ const IterationControls = ({ iterations, onIterationChange, isLoading = false })
   const getIterationLabel = (count) => {
     const labels = {
       1: "Quick",
-      2: "Balanced", 
+      2: "Balanced",
       3: "Detailed",
       4: "Enhanced",
       5: "Ultra"
@@ -42,115 +41,119 @@ const IterationControls = ({ iterations, onIterationChange, isLoading = false })
   }
 
   return (
-    <div className={`iteration-controls ${isLoading ? 'disabled' : ''}`}>
-      <div className="controls-header">
-        <div className="header-content">
-          <h3 className="controls-title">
-            Refinement Level
-          </h3>
-          <p>Adjust AI processing intensity</p>
+    <div className={`bg-white border border-slate-200 rounded-2xl p-6 shadow-lg transition-all ${isLoading ? 'opacity-60 pointer-events-none' : ''}`}>
+      {/* Header */}
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h3 className="text-lg font-bold text-slate-800 mb-1">Refinement Level</h3>
+          <p className="text-sm text-slate-500">Adjust AI processing intensity</p>
         </div>
-        <div className="iteration-badge">
+        <span className="px-3 py-1.5 bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-primary-500/30">
           {iterations} {iterations === 1 ? 'Iteration' : 'Iterations'}
-        </div>
+        </span>
       </div>
 
-      <div className="slider-container">
-        <button 
-          className="control-btn decrement"
+      {/* Slider Container */}
+      <div className="flex items-center gap-4 mb-6">
+        <button
+          className="w-10 h-10 flex items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-500 transition-all hover:border-primary-500 hover:text-primary-500 hover:bg-primary-50 hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
           onClick={decrement}
           disabled={iterations <= 1 || isLoading}
           aria-label="Decrease iterations"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <line x1="5" y1="12" x2="19" y2="12"/>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
           </svg>
         </button>
 
-        <div className="slider-wrapper">
+        <div className="flex-1">
           <input
             type="range"
             min="1"
             max="5"
             value={iterations}
             onChange={(e) => handleIterationChange(parseInt(e.target.value))}
-            className="iteration-slider"
+            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
             disabled={isLoading}
             aria-label="Refinement iterations"
           />
-          
-          <div className="slider-labels">
+
+          <div className="flex justify-between mt-3">
             {[1, 2, 3, 4, 5].map((value) => (
-              <div 
+              <div
                 key={value}
-                className={`slider-label ${value <= iterations ? 'active' : ''}`}
+                className={`flex flex-col items-center cursor-pointer transition-all hover:-translate-y-0.5 ${value <= iterations ? 'text-primary-500' : 'text-slate-400'}`}
                 onClick={() => handleIterationChange(value)}
               >
-                <span className="label-dot"></span>
-                <span className="label-text">{value}</span>
+                <span className={`w-2 h-2 rounded-full transition-all ${value <= iterations ? 'bg-primary-500 scale-125' : 'bg-slate-300'}`} />
+                <span className="text-xs font-semibold mt-1">{value}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <button 
-          className="control-btn increment"
+        <button
+          className="w-10 h-10 flex items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-500 transition-all hover:border-primary-500 hover:text-primary-500 hover:bg-primary-50 hover:-translate-y-0.5 disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none"
           onClick={increment}
           disabled={iterations >= 5 || isLoading}
           aria-label="Increase iterations"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
         </button>
       </div>
 
-      <div className="iteration-info">
-        <div className="quality-level">
-          <span className="level-name">{getIterationLabel(iterations)}</span>
-          <div className="quality-bars">
+      {/* Info Section */}
+      <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-5">
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-base font-bold text-slate-700">{getIterationLabel(iterations)}</span>
+          <div className="flex gap-0.5">
             {[1, 2, 3, 4, 5].map((level) => (
-              <div 
+              <div
                 key={level}
-                className={`quality-bar ${level <= iterations ? 'active' : ''}`}
+                className={`w-1.5 rounded-sm transition-all ${level <= iterations ? 'bg-primary-500' : 'bg-slate-300'}`}
+                style={{ height: `${6 + level * 2}px` }}
               />
             ))}
           </div>
         </div>
-        
-        <p className="iteration-description">
+
+        <p className="text-sm text-slate-500 text-center mb-5">
           {getIterationDescription(iterations)}
         </p>
 
-        <div className="performance-indicator">
-          <div className="performance-metric">
-            <span className="metric-label">Quality:</span>
-            <div className="metric-bar">
-              <div 
-                className="metric-fill quality-fill"
+        {/* Performance Metrics */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-slate-500 w-14">Quality:</span>
+            <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-primary-500 to-cyan-400 rounded-full transition-all duration-300"
                 style={{ width: `${(iterations / 5) * 100}%` }}
               />
             </div>
-            <span className="metric-value">{Math.round((iterations / 5) * 100)}%</span>
+            <span className="text-xs font-semibold text-slate-600 w-10 text-right">{Math.round((iterations / 5) * 100)}%</span>
           </div>
-          <div className="performance-metric">
-            <span className="metric-label">Speed:</span>
-            <div className="metric-bar">
-              <div 
-                className="metric-fill speed-fill"
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-medium text-slate-500 w-14">Speed:</span>
+            <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-300"
                 style={{ width: `${((6 - iterations) / 5) * 100}%` }}
               />
             </div>
-            <span className="metric-value">{Math.round(((6 - iterations) / 5) * 100)}%</span>
+            <span className="text-xs font-semibold text-slate-600 w-10 text-right">{Math.round(((6 - iterations) / 5) * 100)}%</span>
           </div>
         </div>
       </div>
 
       {isLoading && (
-        <div className="processing-notice">
-          <div className="processing-spinner"></div>
-          <span>Processing with {iterations} iteration{iterations > 1 ? 's' : ''}...</span>
+        <div className="flex items-center gap-3 mt-5 px-4 py-3 bg-primary-50 border border-primary-200 rounded-xl">
+          <div className="w-4 h-4 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
+          <span className="text-sm font-medium text-primary-600">
+            Processing with {iterations} iteration{iterations > 1 ? 's' : ''}...
+          </span>
         </div>
       )}
     </div>
