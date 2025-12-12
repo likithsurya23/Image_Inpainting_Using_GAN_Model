@@ -48,6 +48,12 @@ coverage.xml
 *.log
 local_settings.py
 
+# Django database (DO NOT PUSH)
+db.sqlite3
+
+# Django media uploads
+media/
+
 # Flask stuff:
 instance/
 .webassets-cache
@@ -105,13 +111,13 @@ venv.bak/
 .DS_Store
 Thumbs.db
 
-# Model files
+# Machine learning model files
 *.pth
 *.pt
 *.h5
 *.onnx
 
-# Data
+# Data files
 data/
 datasets/
 *.zip

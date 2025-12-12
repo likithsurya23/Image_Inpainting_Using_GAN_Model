@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const ResultViewer = ({ resultImage, isLoading, processingTime, originalImage }) => {
+  const ResultViewer = ({ resultImage, isLoading, processingTime, originalImage }) => {
   const [imageLoaded, setImageLoaded] = useState(false)
   const [showComparison, setShowComparison] = useState(false)
 
@@ -99,7 +99,8 @@ const ResultViewer = ({ resultImage, isLoading, processingTime, originalImage })
   }
 
   return (
-    <div className="w-full max-w-3xl bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
+   <div className="w-full max-w-[90vw] bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-lg">
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-6 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
         <h3 className="text-base font-bold text-slate-700">Inpainted Result</h3>
@@ -111,7 +112,7 @@ const ResultViewer = ({ resultImage, isLoading, processingTime, originalImage })
           )}
           {originalImage && (
             <button
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${showComparison ? 'bg-primary-500 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:border-primary-500 hover:text-primary-500'}`}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${showComparison ? 'bg-white text-slate-600 border border-slate-200 hover:border-primary-500 hover:text-primary-500' : 'bg-white text-slate-600 border border-slate-200 hover:border-primary-500 hover:text-primary-500'}`}
               onClick={() => setShowComparison(!showComparison)}
             >
               {showComparison ? 'Hide Comparison' : 'Show Comparison'}
@@ -132,68 +133,73 @@ const ResultViewer = ({ resultImage, isLoading, processingTime, originalImage })
               />
               <span className="text-sm font-semibold text-slate-600 bg-white px-4 py-1.5 rounded-full border border-slate-200">Original</span>
             </div>
-            <div className="text-3xl text-primary-500 font-bold md:rotate-0 rotate-90">→</div>
-            <div className="flex flex-col items-center gap-3">
-              <img
-                src={resultImage}
-                alt="Result"
-                className="max-w-[300px] max-h-[300px] rounded-xl shadow-lg border border-slate-200"
-                onLoad={handleImageLoad}
-              />
-              <span className="text-sm font-semibold text-primary-600 bg-primary-50 px-4 py-1.5 rounded-full border border-primary-200">Result</span>
+            <div className="text-3xl text-slate-600 font-bold md:rotate-0 rotate-90">→</div>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+              <div className="flex flex-col items-center gap-3">
+                <img
+                  src={resultImage}
+                  alt="Result"
+                  className="max-w-[300px] max-h-[300px] rounded-xl shadow-lg border border-slate-200"
+                  onLoad={handleImageLoad}
+                />
+                <span className="text-sm font-semibold text-slate-600 bg-white px-4 py-1.5 rounded-full border border-slate-200">Result</span>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="relative flex justify-center">
-            {!imageLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 border-3 border-slate-200 border-t-primary-500 rounded-full animate-spin" />
-              </div>
-            )}
-            <img
-              src={resultImage}
-              alt="Inpainted result"
-              className={`max-w-full max-h-[500px] rounded-xl shadow-lg border border-slate-200 transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-              onLoad={handleImageLoad}
-            />
-          </div>
-        )}
-      </div>
+            <div className="relative flex justify-center overflow-auto w-full h-full">
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-8 h-8 border-3 border-slate-200 border-t-primary-500 rounded-full animate-spin" />
+                </div>
+              )}
 
-      {/* Actions */}
-      <div className="flex flex-wrap gap-3 px-6 py-4 border-t border-slate-200 bg-slate-50">
-        <button
-          onClick={handleDownload}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary-500 hover:bg-primary-600 text-white rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 shadow-lg shadow-primary-500/30"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
-          Download Image
-        </button>
+              <img
+                src={resultImage}
+                alt="Inpainted result"
+                className={`rounded-xl shadow-lg transition-opacity duration-300 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{
+                  width: "auto",      
+                  height: "auto",     
+                  display: "block"
+                }}
+                onLoad={handleImageLoad}
+              />
+            </div>
+          )}
+        </div>
 
-        <button
-          onClick={handleCopyToClipboard}
-          className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-primary-500 hover:text-primary-500 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
-          Copy to Clipboard
-        </button>
+        {/* Actions */}
+        <div className="flex justify-between items-center px-6 py-4 border-t border-slate-200 bg-slate-50">
 
-        {originalImage && (
+          {/* LEFT SIDE BUTTON */}
           <button
-            onClick={() => setShowComparison(!showComparison)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-transparent hover:bg-slate-100 text-slate-600 hover:text-slate-800 rounded-xl font-semibold text-sm transition-all"
+            onClick={handleDownload}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-50 
+                      text-slate-700 border border-slate-200 hover:border-primary-500 
+                      hover:text-primary-500 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
-            {showComparison ? 'Single View' : 'Compare'}
+            Download Image
           </button>
-        )}
-      </div>
+
+          {/* RIGHT SIDE BUTTON */}
+          <button
+            onClick={handleCopyToClipboard}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-slate-50 
+                      text-slate-700 border border-slate-200 hover:border-primary-500 
+                      hover:text-primary-500 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            Copy to Clipboard
+          </button>
+        </div>
 
       {/* Quality Indicator */}
       <div className="px-6 py-4 border-t border-slate-200">

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const HistorySidebar = ({ history, onSelect, selectedId }) => {
+const HistorySidebar = ({ history, onSelect, selectedId, onClearHistory }) => {
   if (history.length === 0) {
     return (
       <aside className="w-full lg:w-72 min-h-[300px] lg:max-h-[calc(100vh-280px)] bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl flex flex-col text-white overflow-hidden shadow-xl relative">
@@ -9,7 +9,7 @@ const HistorySidebar = ({ history, onSelect, selectedId }) => {
 
         <div className="flex justify-between items-center px-5 py-4 bg-white/5 border-b border-white/10">
           <h3 className="text-sm font-semibold text-slate-200">History</h3>
-          <span className="px-3 py-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-full text-xs font-semibold shadow-lg shadow-primary-500/30">
+          <span className="px-3 py-1 bg-gradient-to-r from-purple-500 to-purple-500 rounded-full text-xs font-semibold shadow-lg shadow-primary-500/30">
             {history.length}
           </span>
         </div>
@@ -30,7 +30,7 @@ const HistorySidebar = ({ history, onSelect, selectedId }) => {
 
       <div className="flex justify-between items-center px-5 py-4 bg-white/5 border-b border-white/10">
         <h3 className="text-sm font-semibold text-slate-200">Recent Results</h3>
-        <span className="px-3 py-1 bg-gradient-to-r from-primary-500 to-purple-500 rounded-full text-xs font-semibold shadow-lg shadow-primary-500/30">
+        <span className="px-3 py-1 bg-gradient-to-r from-purple-500 to-purple-500 rounded-full text-xs font-semibold shadow-lg shadow-primary-500/30">
           {history.length}
         </span>
       </div>
@@ -83,7 +83,6 @@ const HistorySidebar = ({ history, onSelect, selectedId }) => {
               className="lg:opacity-0 lg:group-hover:opacity-100 opacity-100 p-2 rounded-lg bg-white/10 hover:bg-primary-500/30 text-slate-400 hover:text-primary-300 transition-all lg:mt-0 mt-2"
               onClick={(e) => {
                 e.stopPropagation()
-                // Download functionality
                 const link = document.createElement('a')
                 link.href = item.result
                 link.download = `inpainted-${item.id}.png`
@@ -100,7 +99,7 @@ const HistorySidebar = ({ history, onSelect, selectedId }) => {
       <div className="p-4 border-t border-white/10 bg-black/20">
         <button
           className="w-full py-3 px-5 bg-red-500/10 hover:bg-red-500/20 text-red-300 hover:text-red-200 border border-red-500/20 hover:border-red-500/40 rounded-xl text-sm font-medium transition-all hover:-translate-y-0.5"
-          onClick={() => console.log('Clear history')}
+          onClick={onClearHistory}
         >
           Clear History
         </button>

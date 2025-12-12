@@ -85,7 +85,8 @@ const MaskCanvas = ({
     if (tool === 'brush') {
       ctx.globalCompositeOperation = 'source-over'
       ctx.fillStyle = 'rgba(255, 0, 0, 0.6)'
-    } else {
+    } 
+    else {
       ctx.globalCompositeOperation = 'destination-out'
       ctx.fillStyle = 'rgba(0, 0, 0, 1)'
     }

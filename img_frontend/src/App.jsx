@@ -4,7 +4,7 @@ import MaskCanvas from './components/MaskCanvas/MaskCanvas'
 import ResultViewer from './components/ResultViewer/ResultViewer'
 import IterationControls from './components/IterationControls/IterationControls'
 import HistorySidebar from './components/HistorySidebar/HistorySidebar'
-import { inpaintImage } from './api/inpaintApi'
+import { inpaintImage } from './api/inpaint'
 
 function App() {
   const [originalImage, setOriginalImage] = useState(null)
@@ -12,7 +12,8 @@ function App() {
   const [resultImage, setResultImage] = useState(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [jobId, setJobId] = useState(null)
-  const [history, setHistory] = useState([])
+  const [history, setHistory] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
   const [iterations, setIterations] = useState(2)
   const [currentStep, setCurrentStep] = useState(1)
 
@@ -29,9 +30,7 @@ function App() {
 
   const handleMaskChange = (mask) => {
     setMaskData(mask)
-    if (mask && !resultImage) {
-      setCurrentStep(3)
-    }
+
   }
 
   const handleInpaint = async () => {
@@ -65,6 +64,11 @@ function App() {
       setIsProcessing(false)
     }
   }
+  const handleClearHistory = () => {
+    setHistory([]);
+    setJobId(null);
+    setResultImage(null);
+  };
 
   const handleIterationChange = (newIterations) => {
     setIterations(newIterations)
@@ -128,28 +132,39 @@ function App() {
           {steps.map((step, index) => (
             <React.Fragment key={step.number}>
               <div className="flex flex-col items-center gap-2 px-2 md:px-4">
-                <div className={`
-                  w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm md:text-base transition-all duration-300
-                  ${getStepStatus(step.number) === 'pending'
-                    ? 'bg-white/10 text-white/50 border-2 border-white/20'
-                    : getStepStatus(step.number) === 'active'
-                      ? 'bg-gradient-to-br from-primary-500 to-purple-500 text-white shadow-lg shadow-primary-500/40 scale-110 animate-pulse-glow'
-                      : 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30'}
-                `}>
-                  {getStepStatus(step.number) === 'completed' ? '✓' : step.number}
+                
+                <div
+                  className={`
+                    w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center 
+                    font-bold text-sm md:text-base transition-all duration-300
+                    ${
+                      getStepStatus(step.number) === "pending"
+                        ? "bg-gradient-to-br from-gray-500 to-gray-700 text-white/70 border border-white/10"
+                        : getStepStatus(step.number) === "active"
+                        ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-lg shadow-purple-500/40 scale-110 animate-pulse-glow"
+                        : "bg-gradient-to-br from-emerald-500 to-emerald-700 text-white shadow-lg shadow-emerald-500/40"
+                    }
+                  `}
+                >
+                  {getStepStatus(step.number) === "completed" ? "✓" : step.number}
                 </div>
-                <span className={`
-                  text-xs font-semibold uppercase tracking-wider hidden sm:block transition-colors duration-200
-                  ${getStepStatus(step.number) === 'pending'
-                    ? 'text-white/40'
-                    : getStepStatus(step.number) === 'active'
-                      ? 'text-primary-300'
-                      : 'text-emerald-300'}
-                `}>
+
+                <span
+                  className={`
+                    text-xs font-semibold uppercase tracking-wider hidden sm:block transition-colors duration-200
+                    ${
+                      getStepStatus(step.number) === "pending"
+                        ? "text-white/50"
+                        : getStepStatus(step.number) === "active"
+                        ? "text-purple-300"
+                        : "text-emerald-300"
+                    }
+                  `}
+                >
                   {step.label}
                 </span>
               </div>
-
+              
               {index < steps.length - 1 && (
                 <div className={`
                   flex-1 h-0.5 min-w-[20px] max-w-[60px] mb-6 rounded-full transition-all duration-500
@@ -170,7 +185,9 @@ function App() {
           history={history}
           onSelect={handleHistorySelect}
           selectedId={jobId}
+          onClearHistory={handleClearHistory}
         />
+
 
         {/* Main Workspace */}
         <main className="flex-1 bg-white rounded-3xl shadow-xl border border-gray-100 p-6 md:p-8 relative overflow-hidden">
@@ -230,19 +247,26 @@ function App() {
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4">
-                <button
-                  onClick={handleNewImage}
-                  className="btn-secondary"
-                >
-                  ← Upload New Image
-                </button>
-                <button
-                  onClick={() => setCurrentStep(3)}
-                  disabled={!maskData}
-                  className="btn-primary"
-                >
-                  Continue to Settings →
-                </button>
+              <button
+                onClick={handleNewImage}
+                className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-xl 
+                          border border-gray-300 shadow-md transition-all 
+                          hover:bg-gray-300 hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                ← Upload New Image
+              </button>
+              <button
+                onClick={() => setCurrentStep(3)}
+                disabled={!maskData}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white 
+                          font-semibold rounded-xl shadow-lg shadow-blue-500/30 
+                          hover:from-blue-700 hover:to-blue-800 hover:shadow-xl 
+                          hover:-translate-y-0.5 transition-all 
+                          disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Continue →
+              </button>
+
               </div>
             </div>
           )}
@@ -266,46 +290,68 @@ function App() {
                   isLoading={isProcessing}
                 />
 
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
-                  <h4 className="text-slate-700 font-semibold mb-5">Preview</h4>
-                  <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                    <div className="flex flex-col items-center gap-3">
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                <h4 className="text-slate-700 font-semibold mb-5">Preview</h4>
+
+                <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                  {/* Original */}
+                  <div className="flex flex-col items-center gap-3">
+                    <img
+                      src={originalImage}
+                      alt="Original"
+                      className="w-72 h-60 object-contain rounded-xl border-2 border-slate-200 shadow-md bg-white"
+                    />
+                    <span className="text-sm text-slate-500 font-medium">Original Image</span>
+                  </div>
+
+                  <div className="text-2xl text-primary-500 font-bold animate-pulse md:rotate-0 rotate-90">
+                    →
+                  </div>
+
+                  {/* Original + Mask overlay */}
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="relative w-72 h-60 rounded-xl border-2 border-slate-200 overflow-hidden shadow-md bg-white">
+                      {/* Base image */}
                       <img
                         src={originalImage}
-                        alt="Original"
-                        className="w-48 h-36 object-cover rounded-xl border-2 border-slate-200 shadow-md hover:scale-105 transition-transform"
+                        alt="With mask"
+                        className="absolute inset-0 w-full h-full object-contain"
                       />
-                      <span className="text-sm text-slate-500 font-medium">Original Image</span>
+                      {/* Mask overlay */}
+                      <img
+                        src={maskData}
+                        alt="Mask overlay"
+                        className="absolute inset-0 w-full h-full object-contain opacity-70 mix-blend-multiply"
+                      />
                     </div>
-                    <div className="text-2xl text-primary-500 font-bold animate-pulse md:rotate-0 rotate-90">→</div>
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative w-48 h-36 rounded-xl border-2 border-slate-200 overflow-hidden shadow-md">
-                        <img src={originalImage} alt="With mask" className="w-full h-full object-cover" />
-                        <div
-                          className="absolute inset-0 bg-cover opacity-70 mix-blend-multiply"
-                          style={{ backgroundImage: `url(${maskData})` }}
-                        />
-                      </div>
-                      <span className="text-sm text-slate-500 font-medium">Areas to Remove</span>
-                    </div>
+                    <span className="text-sm text-slate-500 font-medium">Areas to Remove</span>
                   </div>
                 </div>
               </div>
+          </div>
 
               <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4">
                 <button
                   onClick={() => setCurrentStep(2)}
-                  className="btn-secondary"
+                  className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-xl 
+                            border border-gray-300 shadow-md transition-all 
+                            hover:bg-gray-300 hover:-translate-y-0.5 hover:shadow-lg"
                 >
                   ← Edit Mask
                 </button>
+
                 <button
                   onClick={handleInpaint}
                   disabled={isProcessing}
-                  className="btn-primary px-10 py-4 text-lg bg-gradient-to-r from-primary-500 to-purple-500 shadow-lg shadow-purple-500/30"
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white 
+                            font-semibold rounded-xl shadow-lg shadow-blue-500/30 
+                            hover:from-blue-700 hover:to-blue-800 hover:shadow-xl 
+                            hover:-translate-y-0.5 transition-all 
+                            disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  🎨 Start Inpainting
+                  Start Inpainting →
                 </button>
+
               </div>
             </div>
           )}
@@ -325,7 +371,7 @@ function App() {
                 </p>
               </div>
 
-              <div className="flex justify-center">
+              <div className="w-full  flex justify-center items-center p-5 bg-slate-50 rounded-2xl border border-slate-200">
                 <ResultViewer
                   resultImage={resultImage}
                   isLoading={isProcessing}
@@ -338,19 +384,27 @@ function App() {
                 <div className="flex flex-wrap justify-center gap-4 mt-6">
                   <button
                     onClick={handleEditMask}
-                    className="btn-secondary"
+                    className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-xl 
+                              border border-gray-300 shadow-md transition-all 
+                              hover:bg-gray-300 hover:-translate-y-0.5 hover:shadow-lg"
                   >
                     ✏️ Edit Mask
                   </button>
                   <button
                     onClick={handleNewImage}
-                    className="btn-primary"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white 
+                              font-semibold rounded-xl shadow-lg shadow-blue-500/30 
+                              hover:from-blue-700 hover:to-blue-800 hover:shadow-xl 
+                              hover:-translate-y-0.5 transition-all 
+                              disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     🆕 New Image
                   </button>
                   <button
                     onClick={() => setCurrentStep(3)}
-                    className="btn-ghost"
+                    className="px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-xl 
+                              border border-gray-300 shadow-md transition-all 
+                              hover:bg-gray-300 hover:-translate-y-0.5 hover:shadow-lg"
                   >
                     ⚙️ Change Settings
                   </button>

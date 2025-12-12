@@ -140,7 +140,7 @@ const ImageUploader = ({ onImageUpload, isLoading = false }) => {
               <p className="text-slate-500 mb-2">Click or drag an image here to upload</p>
               <small className="text-slate-400">Supports JPG, PNG, WebP • Max 10MB</small>
             </div>
-            <button className="px-8 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all">
+            <button className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl font-semibold shadow-lg shadow-green-500/30 hover:shadow-xl hover:-translate-y-0.5 transition-all">
               Choose File
             </button>
           </div>

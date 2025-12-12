@@ -48,7 +48,7 @@ const IterationControls = ({ iterations, onIterationChange, isLoading = false })
           <h3 className="text-lg font-bold text-slate-800 mb-1">Refinement Level</h3>
           <p className="text-sm text-slate-500">Adjust AI processing intensity</p>
         </div>
-        <span className="px-3 py-1.5 bg-gradient-to-r from-primary-500 to-purple-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-primary-500/30">
+        <span className="px-3 py-1.5 bg-gradient-to-r from-purple-500 to-purple-500 text-white rounded-lg text-xs font-semibold shadow-lg shadow-primary-500/30">
           {iterations} {iterations === 1 ? 'Iteration' : 'Iterations'}
         </span>
       </div>
